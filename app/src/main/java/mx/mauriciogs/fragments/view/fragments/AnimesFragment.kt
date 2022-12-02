@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import mx.mauriciogs.fragments.R
+import mx.mauriciogs.fragments.ReceiverFragment
 import mx.mauriciogs.fragments.databinding.FragmentAnimesBinding
 import mx.mauriciogs.fragments.model.Anime
 import mx.mauriciogs.fragments.view.adapters.AnimesAdapter
@@ -43,12 +44,26 @@ class AnimesFragment : Fragment() {
         val adapter = AnimesAdapter(requireActivity(), datos)
 
         binding.lvAnimes.adapter = adapter
+
         binding.lvAnimes.setOnItemClickListener {
                 parent, view, position, id ->
             Toast.makeText(requireContext(),
                 "El item seleccionado tiene id: $id",
                 Toast.LENGTH_LONG
             ).show()
+
+            val bundle = Bundle()
+            bundle.putString("titulo", datos[position].titulo)
+            bundle.putString("tipo", datos[position].tipo)
+            bundle.putString("fecha", datos[position].fecha)
+
+            parentFragmentManager.setFragmentResult("requestAnimeResult", bundle)
+
+            val receiver = ReceiverFragment()
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.flFragmentContainer, receiver)
+                .commit()
         }
     }
 }
